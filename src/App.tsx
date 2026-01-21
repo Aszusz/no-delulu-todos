@@ -4,6 +4,16 @@ import { useAppDispatch, useAppSelector } from './hooks'
 import { AppActions } from './store/actions'
 import { selectTodos } from './store/selectors'
 
+function formatDate(timestamp: number): string {
+  return new Date(timestamp).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
+
 function App() {
   const dispatch = useAppDispatch()
   const todos = useAppSelector(selectTodos)
@@ -50,7 +60,13 @@ function App() {
             data-testid={testIds.item}
             className="border-b py-2"
           >
-            {todo.text}
+            <span data-testid={testIds.itemText}>{todo.text}</span>
+            <span
+              data-testid={testIds.itemTimestamp}
+              className="ml-2 text-sm text-gray-500"
+            >
+              {formatDate(todo.createdAt)}
+            </span>
           </li>
         ))}
       </ul>

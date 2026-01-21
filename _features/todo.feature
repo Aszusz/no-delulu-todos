@@ -11,3 +11,7 @@ Feature: Todo List
     When I enter "" in the todo input
     Then the add button should be disabled
     And I should see no todos in the list
+
+  Scenario: Display todo with creation timestamp
+    Given I have a todo "Buy groceries" created at "Jan 19, 2026 3:45 PM"
+    Then I should see the timestamp "Jan 19, 2026" for "Buy groceries"

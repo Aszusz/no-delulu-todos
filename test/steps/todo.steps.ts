@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test'
 import { createBdd } from 'playwright-bdd'
 import { testIds } from './todo.testIds'
-import { setupDefault } from './harness'
+import { setupDefault, setupWithState } from './harness'
 
 const { Given, When, Then } = createBdd()
 
@@ -35,3 +35,26 @@ Then('I should see no todos in the list', async ({ page }) => {
 Then('the add button should be disabled', async ({ page }) => {
   await expect(page.getByTestId(testIds.addButton)).toBeDisabled()
 })
+
+Given(
+  'I have a todo {string} created at {string}',
+  async ({ page }, text: string, dateStr: string) => {
+    const createdAt = new Date(dateStr).getTime()
+    await setupWithState(page, {
+      initialState: {
+        todos: [{ id: '1', text, done: false, createdAt }],
+      },
+    })
+  }
+)
+
+Then(
+  'I should see the timestamp {string} for {string}',
+  async ({ page }, timestamp: string, todoText: string) => {
+    const items = page.getByTestId(testIds.item)
+    const item = items.filter({ hasText: todoText })
+    await expect(item.getByTestId(testIds.itemTimestamp)).toContainText(
+      timestamp
+    )
+  }
+)
