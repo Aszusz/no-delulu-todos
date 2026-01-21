@@ -26,3 +26,12 @@ Then(
     await expect(list.getByTestId(testIds.item)).toContainText(text)
   }
 )
+
+Then('I should see no todos in the list', async ({ page }) => {
+  const list = page.getByTestId(testIds.list)
+  await expect(list.getByTestId(testIds.item)).toHaveCount(0)
+})
+
+Then('the add button should be disabled', async ({ page }) => {
+  await expect(page.getByTestId(testIds.addButton)).toBeDisabled()
+})

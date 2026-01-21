@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { testIds } from '../test/steps/todo.testIds'
 import { useAppDispatch, useAppSelector } from './hooks'
 import { AppActions } from './store/actions'
@@ -6,20 +7,19 @@ import { selectTodos } from './store/selectors'
 function App() {
   const dispatch = useAppDispatch()
   const todos = useAppSelector(selectTodos)
+  const [inputValue, setInputValue] = useState('')
 
   const handleAdd = () => {
-    const input = document.getElementById('todo-input') as HTMLInputElement
-    if (input.value.trim()) {
+    const trimmed = inputValue.trim()
+    if (trimmed) {
       dispatch(
-        AppActions['ui/addTodo'](
-          input.value.trim(),
-          crypto.randomUUID(),
-          Date.now()
-        )
+        AppActions['ui/addTodo'](trimmed, crypto.randomUUID(), Date.now())
       )
-      input.value = ''
+      setInputValue('')
     }
   }
+
+  const isAddDisabled = !inputValue.trim()
 
   return (
     <div className="mx-auto max-w-md p-8">
@@ -29,13 +29,16 @@ function App() {
           id="todo-input"
           data-testid={testIds.input}
           type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
           className="flex-1 rounded border px-3 py-2"
           placeholder="Add a todo..."
         />
         <button
           data-testid={testIds.addButton}
           onClick={handleAdd}
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+          disabled={isAddDisabled}
+          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Add
         </button>
