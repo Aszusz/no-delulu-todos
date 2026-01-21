@@ -46,3 +46,12 @@ Feature: Todo List
     And I cancel the deletion
     And I click delete on the todo "Buy groceries"
     Then I should see "Buy groceries" in the todo list
+
+  Scenario: Default filter shows all todos
+    Given I have the following todos:
+      | text          | status |
+      | Buy groceries | active |
+      | Walk the dog  | done   |
+      | Read a book   | active |
+    Then I should see 3 todos
+    And the "all" filter should be active

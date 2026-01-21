@@ -7,4 +7,7 @@ export const testIds = {
   itemTimestamp: 'todo-item-timestamp',
   itemCheckbox: 'todo-item-checkbox',
   itemDeleteButton: 'todo-item-delete-button',
+  filterAll: 'todo-filter-all',
+  filterActive: 'todo-filter-active',
+  filterDone: 'todo-filter-done',
 }

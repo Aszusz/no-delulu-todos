@@ -25,6 +25,10 @@ export function reducer(
         ...state,
         todos: state.todos.filter((todo) => todo.id !== id),
       }),
+      'ui/setFilter': ({ filter }) => ({
+        ...state,
+        filter,
+      }),
     },
     () => state
   )

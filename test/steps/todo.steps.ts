@@ -104,3 +104,35 @@ Then(
     await expect(list).not.toContainText(text)
   }
 )
+
+Given('I have the following todos:', async ({ page }, dataTable) => {
+  const rows = dataTable.hashes() as { text: string; status: string }[]
+  const todos = rows.map((row, i) => ({
+    id: String(i + 1),
+    text: row.text,
+    done: row.status === 'done',
+    createdAt: Date.now() - i * 1000,
+  }))
+  await setupWithState(page, { initialState: { todos } })
+})
+
+Then('I should see {int} todos', async ({ page }, count: number) => {
+  const list = page.getByTestId(testIds.list)
+  await expect(list.getByTestId(testIds.item)).toHaveCount(count)
+})
+
+Then(
+  'the {string} filter should be active',
+  async ({ page }, filter: string) => {
+    const filterTestId =
+      filter === 'all'
+        ? testIds.filterAll
+        : filter === 'active'
+          ? testIds.filterActive
+          : testIds.filterDone
+    await expect(page.getByTestId(filterTestId)).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    )
+  }
+)

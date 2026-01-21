@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { testIds } from '../test/steps/todo.testIds'
 import { useAppDispatch, useAppSelector } from './hooks'
 import { AppActions } from './store/actions'
-import { selectTodos } from './store/selectors'
+import { selectFilter, selectFilteredTodos } from './store/selectors'
+import type { Filter } from './store/state'
 
 function formatDate(timestamp: number): string {
   return new Date(timestamp).toLocaleDateString('en-US', {
@@ -16,7 +17,8 @@ function formatDate(timestamp: number): string {
 
 function App() {
   const dispatch = useAppDispatch()
-  const todos = useAppSelector(selectTodos)
+  const todos = useAppSelector(selectFilteredTodos)
+  const filter = useAppSelector(selectFilter)
   const [inputValue, setInputValue] = useState('')
 
   const handleAdd = () => {
@@ -36,6 +38,16 @@ function App() {
   }
 
   const isAddDisabled = !inputValue.trim()
+
+  const handleFilterClick = (newFilter: Filter) => {
+    dispatch(AppActions['ui/setFilter'](newFilter))
+  }
+
+  const filterButtons: { filter: Filter; label: string; testId: string }[] = [
+    { filter: 'all', label: 'All', testId: testIds.filterAll },
+    { filter: 'active', label: 'Active', testId: testIds.filterActive },
+    { filter: 'done', label: 'Done', testId: testIds.filterDone },
+  ]
 
   return (
     <div className="mx-auto max-w-md p-8">
@@ -58,6 +70,23 @@ function App() {
         >
           Add
         </button>
+      </div>
+      <div className="mb-4 flex gap-2">
+        {filterButtons.map(({ filter: f, label, testId }) => (
+          <button
+            key={f}
+            data-testid={testId}
+            onClick={() => handleFilterClick(f)}
+            aria-pressed={filter === f}
+            className={`rounded px-3 py-1 ${
+              filter === f
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
       <ul data-testid={testIds.list}>
         {todos.map((todo) => (

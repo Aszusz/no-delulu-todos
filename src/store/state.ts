@@ -5,10 +5,14 @@ export type Todo = {
   createdAt: number
 }
 
+export type Filter = 'all' | 'active' | 'done'
+
 export type AppState = {
   todos: Todo[]
+  filter: Filter
 }
 
 export const initialState: AppState = {
   todos: [],
+  filter: 'all',
 }
