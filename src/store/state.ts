@@ -1,3 +1,14 @@
-export type AppState = object
+export type Todo = {
+  id: string
+  text: string
+  done: boolean
+  createdAt: number
+}
 
-export const initialState: AppState = {}
+export type AppState = {
+  todos: Todo[]
+}
+
+export const initialState: AppState = {
+  todos: [],
+}

@@ -1,19 +1,11 @@
-import {
-  legacy_createStore as createStore,
-  combineReducers,
-  applyMiddleware,
-} from 'redux'
+import { legacy_createStore as createStore, applyMiddleware } from 'redux'
 import { reducer } from './reducers'
 import { AppActions } from './actions'
 import { logger } from './middleware/logger'
 import { type Effects } from './effects'
 import { initialState, type AppState } from './state'
 
-const rootReducer = combineReducers({
-  game: reducer,
-})
-
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = AppState
 
 export type StoreConfig = {
   initialState?: Partial<AppState>
@@ -23,11 +15,7 @@ export type StoreConfig = {
 export function createAppStore(config: StoreConfig = {}) {
   const state: AppState = { ...initialState, ...config.initialState }
 
-  const store = createStore(
-    rootReducer,
-    { game: state } as unknown as undefined,
-    applyMiddleware(logger)
-  )
+  const store = createStore(reducer, state, applyMiddleware(logger))
   store.dispatch(AppActions['app/started']())
   return store
 }
