@@ -121,6 +121,16 @@ Then('I should see {int} todos', async ({ page }, count: number) => {
   await expect(list.getByTestId(testIds.item)).toHaveCount(count)
 })
 
+When('I click the {string} filter', async ({ page }, filter: string) => {
+  const filterTestId =
+    filter === 'all'
+      ? testIds.filterAll
+      : filter === 'active'
+        ? testIds.filterActive
+        : testIds.filterDone
+  await page.getByTestId(filterTestId).click()
+})
+
 Then(
   'the {string} filter should be active',
   async ({ page }, filter: string) => {

@@ -55,3 +55,13 @@ Feature: Todo List
       | Read a book   | active |
     Then I should see 3 todos
     And the "all" filter should be active
+
+  Scenario: Filter todos by active status
+    Given I have the following todos:
+      | text          | status |
+      | Buy groceries | active |
+      | Walk the dog  | done   |
+      | Read a book   | active |
+    When I click the "active" filter
+    Then I should see 2 todos
+    And the "active" filter should be active
