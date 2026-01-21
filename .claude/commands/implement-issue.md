@@ -1,13 +1,12 @@
 ---
 name: implement-issue
-description: Orchestrates implementation of a GitHub issue by invoking /tdd-scenario for each requirement. Creates one commit per scenario.
+description: Orchestrates implementation of a GitHub issue using Task subagents for each TDD cycle. Creates one commit per scenario.
 argument-hint: [issue-number]
-allowed-tools: Bash(git:*), Read, Edit, Glob, Grep
 ---
 
 # Implement Issue #$1
 
-Orchestrate the implementation of issue #$1 by breaking it into scenarios and executing `/tdd-scenario` for each one.
+Orchestrate the implementation of issue #$1 by breaking it into scenarios and spawning a **Task subagent** for each TDD cycle.
 
 ## 1. Understand Requirements
 
@@ -47,27 +46,57 @@ Scenarios for issue #$1:
 
 ## 5. Implement Scenarios (One at a Time)
 
-**CRITICAL: Execute `/tdd-scenario $1 "<description>"` for EACH scenario separately.**
+**CRITICAL: Use the Task tool with `subagent_type: "general-purpose"` for EACH scenario.**
 
-For each scenario in your list:
-
-1. Run: `/tdd-scenario $1 "<scenario-description>"`
-2. Wait for it to complete and commit
-3. Verify commit exists: `git log --oneline -1`
-4. Only then proceed to the next scenario
-
-**Do NOT batch scenarios. Do NOT skip the /tdd-scenario command.**
-
-Example sequence:
+For each scenario, spawn a subagent with this prompt structure:
 
 ```
-/tdd-scenario $1 "add todo with text input"
-  → completes, commits
-/tdd-scenario $1 "prevent empty todo submission"
-  → completes, commits
-/tdd-scenario $1 "toggle todo done status"
-  → completes, commits
+Task(
+  description: "TDD: <short-scenario-name>",
+  subagent_type: "general-purpose",
+  prompt: """
+Execute ONE complete TDD Red-Green-Refactor cycle for issue #$1.
+
+**Scenario:** <scenario-description>
+
+## Instructions
+
+### 1. Red Phase - Write Failing Test
+- Read TESTING.md for test patterns
+- Create test IDs in `test/steps/*.testIds.ts` if needed
+- Write step definitions in `test/steps/*.steps.ts`
+- Add scenario to feature file in `_features/*.feature`
+- Run `npm test` and verify the new test FAILS
+
+### 2. Green Phase - Make It Pass
+- Read CLAUDE.md for architecture patterns
+- Write minimal implementation to make the test pass
+- Run `npm test` and verify ALL tests PASS
+
+### 3. Refactor Phase - Clean Up
+- Improve code quality while keeping tests green
+- Run `npm run all` (format, lint, typecheck, test)
+- All checks must pass
+
+### 4. Commit
+```bash
+git add <specific files>
+git commit -m "feat: <scenario-description> (#$1)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
+
+### 5. Return Summary
+Return: commit hash, files changed, what was implemented.
+"""
+)
+```
+
+After each Task completes:
+1. Verify commit exists: `git log --oneline -1`
+2. Only then proceed to the next scenario
+
+**Do NOT batch scenarios into a single Task. One Task per scenario.**
 
 ## 6. Verify Commit History
 
@@ -77,7 +106,7 @@ Before creating the PR:
 git log --oneline main..HEAD
 ```
 
-**Verify:** There should be ONE commit PER scenario. If you see a single commit containing multiple scenarios, something went wrong.
+**Verify:** There should be ONE commit PER scenario.
 
 ## 7. Submit Pull Request
 
@@ -89,4 +118,4 @@ git log --oneline main..HEAD
 
 ---
 
-**Orchestrator Role:** This command PLANS and DELEGATES. The actual TDD work happens in `/tdd-scenario`. Your job is to identify scenarios and invoke that command for each one, verifying commits between invocations.
+**Orchestrator Role:** This command PLANS and DELEGATES via Task subagents. Each subagent runs a complete TDD cycle and returns. You maintain control flow between scenarios.
