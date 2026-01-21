@@ -1,19 +1,20 @@
 ---
 name: tdd-scenario
-description: Executes a single TDD Red-Green-Refactor cycle for one scenario and commits. Use this for incremental development.
+description: Executes a single TDD Red-Green-Refactor cycle for one scenario and commits. Use standalone or let /implement-issue orchestrate via subagents.
 argument-hint: <issue-number> <scenario-description>
-allowed-tools: Bash(git:*), Read, Edit, Glob, Grep
 ---
 
 # TDD Cycle: $2
 
 Execute ONE complete Red-Green-Refactor cycle for the scenario described above, linked to issue #$1.
 
+**Note:** This command can be run standalone. When using `/implement-issue`, TDD cycles are executed via Task subagents instead (for proper control flow).
+
 **IMPORTANT: This command handles exactly ONE scenario. Do not implement multiple scenarios.**
 
 ## 1. Red Phase - Write Failing Test
 
-- Add or update test files following @TESTING.md patterns
+- Read @TESTING.md for test patterns
 - Create test IDs in `test/steps/*.testIds.ts` if needed
 - Write step definitions in `test/steps/*.steps.ts`
 - Add scenario to feature file in `_features/*.feature`
@@ -22,8 +23,8 @@ Execute ONE complete Red-Green-Refactor cycle for the scenario described above, 
 
 ## 2. Green Phase - Make It Pass
 
+- Read @CLAUDE.md for architecture patterns
 - Write the **minimal** implementation to make the test pass
-- Follow patterns in @CLAUDE.md (layer-based Redux architecture)
 - Modify only what's necessary for THIS scenario
 - Run `npm test` and **verify ALL tests PASS**
 
@@ -46,12 +47,11 @@ git commit -m "feat: <scenario-description> (#$1)
 Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
 
-## 5. Verify and Stop
+## 5. Verify and Report
 
 - Run `git log --oneline -1` to confirm commit was created
-- **STOP HERE** - Do not continue to other scenarios
-- Report back what was implemented and committed
+- Report: commit hash, files changed, what was implemented
 
 ---
 
-**Scope Constraint:** This command implements exactly ONE scenario. If you notice other scenarios that need work, note them but do NOT implement them. Return control after committing.
+**Scope Constraint:** This command implements exactly ONE scenario. If you notice other scenarios that need work, note them but do NOT implement them.
