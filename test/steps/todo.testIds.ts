@@ -1,0 +1,16 @@
+export const testIds = {
+  todoInput: 'todo-input',
+  todoSubmitButton: 'todo-submit-button',
+  todoList: 'todo-list',
+  todoItem: 'todo-item',
+  todoText: 'todo-text',
+  todoToggle: 'todo-toggle',
+  todoDeleteButton: 'todo-delete-button',
+  todoTimestamp: 'todo-timestamp',
+  filterAll: 'todo-filter-all',
+  filterActive: 'todo-filter-active',
+  filterDone: 'todo-filter-done',
+  confirmDialog: 'todo-confirm-dialog',
+  confirmYes: 'todo-confirm-yes',
+  confirmNo: 'todo-confirm-no',
+}
