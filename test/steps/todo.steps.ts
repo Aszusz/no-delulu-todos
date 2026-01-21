@@ -58,3 +58,27 @@ Then(
     )
   }
 )
+
+When('I toggle the todo {string}', async ({ page }, text: string) => {
+  const items = page.getByTestId(testIds.item)
+  const item = items.filter({ hasText: text })
+  await item.getByTestId(testIds.itemCheckbox).click()
+})
+
+Then(
+  'the todo {string} should be marked as done',
+  async ({ page }, text: string) => {
+    const items = page.getByTestId(testIds.item)
+    const item = items.filter({ hasText: text })
+    await expect(item.getByTestId(testIds.itemCheckbox)).toBeChecked()
+  }
+)
+
+Then(
+  'the todo {string} should be marked as active',
+  async ({ page }, text: string) => {
+    const items = page.getByTestId(testIds.item)
+    const item = items.filter({ hasText: text })
+    await expect(item.getByTestId(testIds.itemCheckbox)).not.toBeChecked()
+  }
+)

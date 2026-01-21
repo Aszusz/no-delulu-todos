@@ -5,4 +5,5 @@ export const testIds = {
   item: 'todo-item',
   itemText: 'todo-item-text',
   itemTimestamp: 'todo-item-timestamp',
+  itemCheckbox: 'todo-item-checkbox',
 }

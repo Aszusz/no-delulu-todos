@@ -15,6 +15,12 @@ export function reducer(
         ...state,
         todos: [...state.todos, { id, text, done: false, createdAt }],
       }),
+      'ui/toggleTodo': ({ id }) => ({
+        ...state,
+        todos: state.todos.map((todo) =>
+          todo.id === id ? { ...todo, done: !todo.done } : todo
+        ),
+      }),
     },
     () => state
   )

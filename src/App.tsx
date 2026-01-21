@@ -58,8 +58,15 @@ function App() {
           <li
             key={todo.id}
             data-testid={testIds.item}
-            className="border-b py-2"
+            className="flex items-center border-b py-2"
           >
+            <input
+              type="checkbox"
+              data-testid={testIds.itemCheckbox}
+              checked={todo.done}
+              onChange={() => dispatch(AppActions['ui/toggleTodo'](todo.id))}
+              className="mr-2"
+            />
             <span data-testid={testIds.itemText}>{todo.text}</span>
             <span
               data-testid={testIds.itemTimestamp}
