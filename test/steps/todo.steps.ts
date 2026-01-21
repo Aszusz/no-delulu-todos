@@ -82,3 +82,25 @@ Then(
     await expect(item.getByTestId(testIds.itemCheckbox)).not.toBeChecked()
   }
 )
+
+When('I click delete on the todo {string}', async ({ page }, text: string) => {
+  const items = page.getByTestId(testIds.item)
+  const item = items.filter({ hasText: text })
+  await item.getByTestId(testIds.itemDeleteButton).click()
+})
+
+When('I confirm the deletion', async ({ page }) => {
+  page.on('dialog', (dialog) => dialog.accept())
+})
+
+When('I cancel the deletion', async ({ page }) => {
+  page.on('dialog', (dialog) => dialog.dismiss())
+})
+
+Then(
+  'I should not see {string} in the todo list',
+  async ({ page }, text: string) => {
+    const list = page.getByTestId(testIds.list)
+    await expect(list).not.toContainText(text)
+  }
+)

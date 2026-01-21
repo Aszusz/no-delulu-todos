@@ -21,6 +21,10 @@ export function reducer(
           todo.id === id ? { ...todo, done: !todo.done } : todo
         ),
       }),
+      'ui/deleteTodo': ({ id }) => ({
+        ...state,
+        todos: state.todos.filter((todo) => todo.id !== id),
+      }),
     },
     () => state
   )

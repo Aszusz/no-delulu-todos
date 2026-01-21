@@ -9,6 +9,7 @@ export const AppActions = discUnion(
       createdAt,
     }),
     'ui/toggleTodo': (id: string) => ({ id }),
+    'ui/deleteTodo': (id: string) => ({ id }),
   },
   'type'
 )

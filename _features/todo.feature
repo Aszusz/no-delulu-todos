@@ -30,3 +30,19 @@ Feature: Todo List
     And I toggle the todo "Buy groceries"
     And I toggle the todo "Buy groceries"
     Then the todo "Buy groceries" should be marked as active
+
+  Scenario: Delete todo with confirmation
+    Given I open the todo app
+    When I enter "Buy groceries" in the todo input
+    And I click the add button
+    And I confirm the deletion
+    And I click delete on the todo "Buy groceries"
+    Then I should not see "Buy groceries" in the todo list
+
+  Scenario: Cancel todo deletion
+    Given I open the todo app
+    When I enter "Buy groceries" in the todo input
+    And I click the add button
+    And I cancel the deletion
+    And I click delete on the todo "Buy groceries"
+    Then I should see "Buy groceries" in the todo list

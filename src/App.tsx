@@ -29,6 +29,12 @@ function App() {
     }
   }
 
+  const handleDelete = (id: string, text: string) => {
+    if (window.confirm(`Delete "${text}"?`)) {
+      dispatch(AppActions['ui/deleteTodo'](id))
+    }
+  }
+
   const isAddDisabled = !inputValue.trim()
 
   return (
@@ -74,6 +80,13 @@ function App() {
             >
               {formatDate(todo.createdAt)}
             </span>
+            <button
+              data-testid={testIds.itemDeleteButton}
+              onClick={() => handleDelete(todo.id, todo.text)}
+              className="ml-auto text-red-500 hover:text-red-700"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
