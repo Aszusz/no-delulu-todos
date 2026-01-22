@@ -6,4 +6,8 @@ export const testIds = {
   itemText: 'todo-item-text',
   itemTimestamp: 'todo-item-timestamp',
   itemToggle: 'todo-item-toggle',
+  itemDeleteButton: 'todo-item-delete-button',
+  confirmDialog: 'todo-confirm-dialog',
+  confirmButton: 'todo-confirm-button',
+  cancelButton: 'todo-cancel-button',
 }

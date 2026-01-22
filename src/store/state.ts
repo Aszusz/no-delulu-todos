@@ -7,8 +7,10 @@ export type Todo = {
 
 export type AppState = {
   todos: Todo[]
+  pendingDeleteId: string | null
 }
 
 export const initialState: AppState = {
   todos: [],
+  pendingDeleteId: null,
 }

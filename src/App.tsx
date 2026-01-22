@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { testIds } from '../test/steps/todo.testIds'
 import { useAppDispatch, useAppSelector } from './hooks'
 import { AppActions } from './store/actions'
-import { selectTodos } from './store/selectors'
+import { selectPendingDeleteId, selectTodos } from './store/selectors'
 
 function formatTimestamp(timestamp: number): string {
   return new Date(timestamp).toLocaleString('en-US', {
@@ -17,6 +17,7 @@ function formatTimestamp(timestamp: number): string {
 function App() {
   const dispatch = useAppDispatch()
   const todos = useAppSelector(selectTodos)
+  const pendingDeleteId = useAppSelector(selectPendingDeleteId)
   const [inputValue, setInputValue] = useState('')
 
   const handleAdd = () => {
@@ -73,9 +74,45 @@ function App() {
             >
               {formatTimestamp(todo.createdAt)}
             </span>
+            <button
+              data-testid={testIds.itemDeleteButton}
+              onClick={() =>
+                dispatch(AppActions['ui/todoDeleteRequested'](todo.id))
+              }
+              className="ml-auto text-red-500"
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
+
+      {pendingDeleteId && (
+        <div
+          data-testid={testIds.confirmDialog}
+          className="fixed inset-0 flex items-center justify-center bg-black/50"
+        >
+          <div className="rounded bg-white p-4 shadow">
+            <p>Are you sure you want to delete this todo?</p>
+            <div className="mt-4 flex gap-2">
+              <button
+                data-testid={testIds.confirmButton}
+                onClick={() => dispatch(AppActions['ui/todoDeleteConfirmed']())}
+                className="rounded bg-red-500 px-4 py-1 text-white"
+              >
+                Delete
+              </button>
+              <button
+                data-testid={testIds.cancelButton}
+                onClick={() => dispatch(AppActions['ui/todoDeleteCancelled']())}
+                className="rounded bg-gray-300 px-4 py-1"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

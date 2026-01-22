@@ -21,6 +21,19 @@ export function reducer(
           todo.id === id ? { ...todo, done: !todo.done } : todo
         ),
       }),
+      'ui/todoDeleteRequested': ({ id }) => ({
+        ...state,
+        pendingDeleteId: id,
+      }),
+      'ui/todoDeleteConfirmed': () => ({
+        ...state,
+        todos: state.todos.filter((todo) => todo.id !== state.pendingDeleteId),
+        pendingDeleteId: null,
+      }),
+      'ui/todoDeleteCancelled': () => ({
+        ...state,
+        pendingDeleteId: null,
+      }),
     },
     () => state
   )

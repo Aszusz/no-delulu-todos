@@ -71,3 +71,28 @@ Then(
     await expect(item.getByTestId(testIds.itemToggle)).not.toBeChecked()
   }
 )
+
+When('I click delete on the todo {string}', async ({ page }, text: string) => {
+  const item = page.getByTestId(testIds.item).filter({ hasText: text })
+  await item.getByTestId(testIds.itemDeleteButton).click()
+})
+
+Then('I see a confirmation dialog', async ({ page }) => {
+  await expect(page.getByTestId(testIds.confirmDialog)).toBeVisible()
+})
+
+When('I confirm the deletion', async ({ page }) => {
+  await page.getByTestId(testIds.confirmButton).click()
+})
+
+When('I cancel the deletion', async ({ page }) => {
+  await page.getByTestId(testIds.cancelButton).click()
+})
+
+Then(
+  'I do not see {string} in the todo list',
+  async ({ page }, text: string) => {
+    const item = page.getByTestId(testIds.item).filter({ hasText: text })
+    await expect(item).toHaveCount(0)
+  }
+)
