@@ -45,7 +45,7 @@ function TodoInput() {
 
   return (
     <div
-      className={`flex items-center gap-3 rounded-2xl bg-[var(--color-paper)] p-2 pl-5 transition-all duration-300 ease-out ${isFocused ? 'shadow-[var(--shadow-lifted)] ring-2 ring-[var(--color-accent)]/20' : 'shadow-[var(--shadow-medium)]'} `}
+      className={`flex items-center gap-3 rounded-2xl border border-slate-700/50 bg-[var(--color-paper)] p-2 pl-5 transition-all duration-300 ease-out ${isFocused ? 'border-[var(--color-accent)]/50 shadow-[var(--shadow-lifted)] shadow-[var(--color-accent)]/10' : 'shadow-[var(--shadow-medium)]'} `}
     >
       <div className="flex-1">
         <input
@@ -87,7 +87,7 @@ function TodoItem({ todo, index }: { todo: Todo; index: number }) {
       style={{ animationDelay: `${index * 0.05}s` }}
     >
       <div
-        className={`group flex items-start gap-4 rounded-xl bg-[var(--color-paper)] p-4 shadow-[var(--shadow-soft)] transition-all duration-200 hover:shadow-[var(--shadow-medium)] ${todo.done ? 'bg-[var(--color-done-soft)]' : ''} `}
+        className={`group flex items-start gap-4 rounded-xl border border-slate-700/50 bg-[var(--color-paper)] p-4 shadow-[var(--shadow-soft)] transition-all duration-200 hover:border-slate-600/50 hover:shadow-[var(--shadow-medium)] ${todo.done ? 'border-emerald-800/30 bg-[var(--color-done-soft)]' : ''} `}
       >
         <div className="pt-0.5">
           <input
@@ -159,10 +159,7 @@ function TodoList() {
             <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" />
           </svg>
         </div>
-        <p
-          className="text-lg text-[var(--color-ink-muted)]"
-          style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic' }}
-        >
+        <p className="text-lg text-[var(--color-ink-muted)]">
           No tasks yet. Add one above.
         </p>
       </div>
@@ -219,7 +216,7 @@ function ConfirmDialog() {
     <div className="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-[var(--color-ink)]/40 opacity-0 backdrop-blur-sm">
       <div
         data-testid="todo-confirm-dialog"
-        className="animate-scale-in mx-4 w-full max-w-md rounded-2xl bg-[var(--color-paper)] p-6 opacity-0 shadow-[var(--shadow-lifted)]"
+        className="animate-scale-in mx-4 w-full max-w-md rounded-2xl border border-slate-700/50 bg-[var(--color-paper)] p-6 opacity-0 shadow-[var(--shadow-lifted)]"
       >
         <div className="mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-danger-soft)]">
           <svg
@@ -236,10 +233,7 @@ function ConfirmDialog() {
             <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
           </svg>
         </div>
-        <h2
-          className="mb-2 text-xl text-[var(--color-ink)]"
-          style={{ fontFamily: 'var(--font-serif)' }}
-        >
+        <h2 className="mb-2 text-xl font-semibold text-[var(--color-ink)]">
           Delete this task?
         </h2>
         <p className="mb-6 text-[var(--color-ink-light)]">
@@ -271,10 +265,7 @@ function App() {
     <div className="mx-auto min-h-screen max-w-xl px-4 py-12 sm:py-16">
       {/* Header */}
       <header className="animate-slide-down mb-10 text-center opacity-0">
-        <h1
-          className="mb-2 text-4xl text-[var(--color-ink)] sm:text-5xl"
-          style={{ fontFamily: 'var(--font-serif)', letterSpacing: '0.02em' }}
-        >
+        <h1 className="mb-2 text-4xl font-bold tracking-tight text-[var(--color-ink)] sm:text-5xl">
           No Delulu Todos
         </h1>
         <p className="text-[var(--color-ink-light)]">
