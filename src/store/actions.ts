@@ -8,6 +8,7 @@ export const AppActions = discUnion(
       id,
       createdAt,
     }),
+    'ui/todoToggled': (id: string) => ({ id }),
   },
   'type'
 )

@@ -53,3 +53,21 @@ Then(
     await expect(item.getByTestId(testIds.itemTimestamp)).toHaveText(timestamp)
   }
 )
+
+When('I toggle the todo {string}', async ({ page }, text: string) => {
+  const item = page.getByTestId(testIds.item).filter({ hasText: text })
+  await item.getByTestId(testIds.itemToggle).click()
+})
+
+Then('the todo {string} is marked as done', async ({ page }, text: string) => {
+  const item = page.getByTestId(testIds.item).filter({ hasText: text })
+  await expect(item.getByTestId(testIds.itemToggle)).toBeChecked()
+})
+
+Then(
+  'the todo {string} is marked as active',
+  async ({ page }, text: string) => {
+    const item = page.getByTestId(testIds.item).filter({ hasText: text })
+    await expect(item.getByTestId(testIds.itemToggle)).not.toBeChecked()
+  }
+)

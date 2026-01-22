@@ -50,9 +50,27 @@ function App() {
       </div>
       <ul data-testid={testIds.list}>
         {todos.map((todo) => (
-          <li key={todo.id} data-testid={testIds.item}>
-            <span data-testid={testIds.itemText}>{todo.text}</span>
-            <span data-testid={testIds.itemTimestamp}>
+          <li
+            key={todo.id}
+            data-testid={testIds.item}
+            className="flex items-center gap-2"
+          >
+            <input
+              type="checkbox"
+              data-testid={testIds.itemToggle}
+              checked={todo.done}
+              onChange={() => dispatch(AppActions['ui/todoToggled'](todo.id))}
+            />
+            <span
+              data-testid={testIds.itemText}
+              className={todo.done ? 'line-through' : ''}
+            >
+              {todo.text}
+            </span>
+            <span
+              data-testid={testIds.itemTimestamp}
+              className="text-sm text-gray-500"
+            >
               {formatTimestamp(todo.createdAt)}
             </span>
           </li>
