@@ -13,12 +13,12 @@ export default defineConfig({
   reporter: [['html', { outputFolder: 'test/report' }]],
   expect: { timeout: 500 },
   use: {
-    baseURL: 'http://localhost:5174',
+    baseURL: 'http://localhost:5199',
     actionTimeout: 500,
   },
   webServer: {
-    command: 'npm run dev:test -- --port 5174',
-    url: 'http://localhost:5174',
-    reuseExistingServer: !process.env.CI,
+    command: 'npm run dev:test -- --port 5199',
+    url: 'http://localhost:5199',
+    reuseExistingServer: false,
   },
 })

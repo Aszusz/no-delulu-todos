@@ -13,6 +13,10 @@
         "-y",
         "@modelcontextprotocol/server-github@latest"
       ]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
     }
   }
 }

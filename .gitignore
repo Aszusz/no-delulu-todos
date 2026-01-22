@@ -16,6 +16,7 @@ dist-ssr
 test/.gen
 test/results
 test/report
+.playwright-mcp
 
 # Editor directories and files
 .vscode/*
