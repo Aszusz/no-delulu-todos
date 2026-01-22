@@ -10,4 +10,7 @@ export const testIds = {
   confirmDialog: 'todo-confirm-dialog',
   confirmButton: 'todo-confirm-button',
   cancelButton: 'todo-cancel-button',
+  filterAll: 'todo-filter-all',
+  filterActive: 'todo-filter-active',
+  filterDone: 'todo-filter-done',
 }

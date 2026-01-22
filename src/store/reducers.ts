@@ -34,6 +34,10 @@ export function reducer(
         ...state,
         pendingDeleteId: null,
       }),
+      'ui/filterChanged': ({ filter }) => ({
+        ...state,
+        filter,
+      }),
     },
     () => state
   )

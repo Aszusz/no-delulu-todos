@@ -96,3 +96,16 @@ Then(
     await expect(item).toHaveCount(0)
   }
 )
+
+When('I select the {string} filter', async ({ page }, filter: string) => {
+  const filterMap: Record<string, string> = {
+    all: testIds.filterAll,
+    active: testIds.filterActive,
+    done: testIds.filterDone,
+  }
+  await page.getByTestId(filterMap[filter]).click()
+})
+
+Then('I see {int} todos in the list', async ({ page }, count: number) => {
+  await expect(page.getByTestId(testIds.item)).toHaveCount(count)
+})

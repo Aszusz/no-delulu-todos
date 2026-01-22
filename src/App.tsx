@@ -2,7 +2,11 @@ import { useState } from 'react'
 import { testIds } from '../test/steps/todo.testIds'
 import { useAppDispatch, useAppSelector } from './hooks'
 import { AppActions } from './store/actions'
-import { selectPendingDeleteId, selectTodos } from './store/selectors'
+import {
+  selectFilter,
+  selectFilteredTodos,
+  selectPendingDeleteId,
+} from './store/selectors'
 
 function formatTimestamp(timestamp: number): string {
   return new Date(timestamp).toLocaleString('en-US', {
@@ -16,7 +20,8 @@ function formatTimestamp(timestamp: number): string {
 
 function App() {
   const dispatch = useAppDispatch()
-  const todos = useAppSelector(selectTodos)
+  const todos = useAppSelector(selectFilteredTodos)
+  const currentFilter = useAppSelector(selectFilter)
   const pendingDeleteId = useAppSelector(selectPendingDeleteId)
   const [inputValue, setInputValue] = useState('')
 
@@ -47,6 +52,29 @@ function App() {
           className="rounded bg-blue-500 px-4 py-1 text-white"
         >
           Add
+        </button>
+      </div>
+      <div className="mb-4 flex gap-2">
+        <button
+          data-testid={testIds.filterAll}
+          onClick={() => dispatch(AppActions['ui/filterChanged']('all'))}
+          className={`rounded px-3 py-1 ${currentFilter === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+        >
+          All
+        </button>
+        <button
+          data-testid={testIds.filterActive}
+          onClick={() => dispatch(AppActions['ui/filterChanged']('active'))}
+          className={`rounded px-3 py-1 ${currentFilter === 'active' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+        >
+          Active
+        </button>
+        <button
+          data-testid={testIds.filterDone}
+          onClick={() => dispatch(AppActions['ui/filterChanged']('done'))}
+          className={`rounded px-3 py-1 ${currentFilter === 'done' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+        >
+          Done
         </button>
       </div>
       <ul data-testid={testIds.list}>

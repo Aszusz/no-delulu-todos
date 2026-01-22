@@ -1,4 +1,5 @@
 import { discUnion, type DiscUnionOf } from 'disc-union'
+import type { TodoFilter } from './state'
 
 export const AppActions = discUnion(
   {
@@ -12,6 +13,7 @@ export const AppActions = discUnion(
     'ui/todoDeleteRequested': (id: string) => ({ id }),
     'ui/todoDeleteConfirmed': () => ({}),
     'ui/todoDeleteCancelled': () => ({}),
+    'ui/filterChanged': (filter: TodoFilter) => ({ filter }),
   },
   'type'
 )

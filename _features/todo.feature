@@ -55,3 +55,15 @@ Feature: Todo List
     Then I see a confirmation dialog
     When I cancel the deletion
     Then I see "Buy groceries" in the todo list
+
+  Scenario: Filter all todos shows all items
+    Given I open the todo app
+    When I enter "Buy groceries" in the todo input
+    And I click the add button
+    And I enter "Walk the dog" in the todo input
+    And I click the add button
+    And I toggle the todo "Buy groceries"
+    And I select the "all" filter
+    Then I see 2 todos in the list
+    And I see "Buy groceries" in the todo list
+    And I see "Walk the dog" in the todo list

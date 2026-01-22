@@ -5,12 +5,16 @@ export type Todo = {
   createdAt: number
 }
 
+export type TodoFilter = 'all' | 'active' | 'done'
+
 export type AppState = {
   todos: Todo[]
   pendingDeleteId: string | null
+  filter: TodoFilter
 }
 
 export const initialState: AppState = {
   todos: [],
   pendingDeleteId: null,
+  filter: 'all',
 }
