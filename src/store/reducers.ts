@@ -11,6 +11,10 @@ export function reducer(
     action,
     {
       'app/started': () => state,
+      'ui/todoAdded': ({ text, id, createdAt }) => ({
+        ...state,
+        todos: [...state.todos, { id, text, done: false, createdAt }],
+      }),
     },
     () => state
   )
