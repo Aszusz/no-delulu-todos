@@ -27,6 +27,20 @@ export async function setupDefault(page: Page) {
   })
 }
 
+// Setup with a fixed timestamp for time-dependent tests
+export async function setupWithTimestamp(page: Page, timestamp: number) {
+  await page.goto('/')
+  await waitForHarness(page)
+  await page.evaluate((ts) => {
+    window.__TEST_HARNESS__?.configure({
+      effects: {
+        now: () => new Date(ts),
+      },
+    })
+    window.__TEST_HARNESS__?.ready()
+  }, timestamp)
+}
+
 export async function getState(page: Page): Promise<RootState | undefined> {
   return page.evaluate(() => window.__TEST_HARNESS__?.getState())
 }
