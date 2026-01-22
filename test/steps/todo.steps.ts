@@ -84,6 +84,8 @@ When('I select the {string} filter', async ({ page }, filter: string) => {
 
 When('I reload the page', async ({ page }) => {
   await page.reload()
+  // After reload, the test harness needs to be re-initialized
+  await setupDefault(page)
 })
 
 // Assertions - visibility
