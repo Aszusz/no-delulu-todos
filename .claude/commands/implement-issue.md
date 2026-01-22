@@ -6,27 +6,56 @@ argument-hint: [issue-number]
 
 # Implement Issue #$1
 
-Orchestrate the implementation of issue #$1 using **three phase-based Task subagents**: Red, Green, Refactor. Each phase handles ALL scenarios and creates ONE commit.
+Orchestrate the implementation of issue #$1 by detecting labels and routing to the appropriate workflow.
 
-## 1. Understand Requirements
+## 1. Fetch Issue and Detect Labels
 
 - Fetch and read issue #$1 using GitHub MCP
+- Extract all labels from the issue
 - Parse all acceptance criteria and business rules
-- Note any labels, linked issues, or dependencies
+- Note any linked issues or dependencies
 
-## 2. Create Feature Branch
+## 2. Route to Appropriate Workflow
+
+Based on detected labels, route to the specialized workflow:
+
+| Priority | Labels                            | Workflow               | Command             |
+| -------- | --------------------------------- | ---------------------- | ------------------- |
+| 1        | `design`, `ui`, `frontend`        | Design Workflow        | `/design $1`        |
+| 2        | `bug`, `fix`, `hotfix`            | Bug Fix Workflow       | `/bugfix $1`        |
+| 3        | `refactor`, `chore`               | Refactor-Only Workflow | `/refactor-only $1` |
+| 4        | `feature`, `enhancement`, or none | TDD Workflow           | Continue below      |
+
+**If a specialized workflow is matched:**
+
+```
+Skill(
+  skill: "[matched-command]",
+  args: "$1"
+)
+```
+
+**If no specialized labels match, continue with TDD workflow below.**
+
+---
+
+## TDD Workflow (Default)
+
+For `feature`, `enhancement`, or unlabeled issues, use the three-phase TDD approach.
+
+### 3. Create Feature Branch
 
 ```bash
 git checkout -b feature/issue-$1
 ```
 
-## 3. Explore Codebase
+### 4. Explore Codebase
 
 - Search for related features and similar implementations
 - Identify existing patterns and conventions in @CLAUDE.md
 - Review @TESTING.md for test patterns
 
-## 4. Plan Scenarios
+### 5. Plan Scenarios
 
 Create an ordered list of scenarios to implement. Each scenario should be:
 
@@ -43,11 +72,11 @@ Scenarios for issue #$1:
 ...
 ```
 
-## 5. Execute Three TDD Phases
+### 6. Execute Three TDD Phases
 
 **CRITICAL: Spawn exactly THREE subagents - one per TDD phase. Each phase handles ALL scenarios.**
 
-### Phase 1: Red
+#### Phase 1: Red
 
 ```
 Task(
@@ -59,7 +88,7 @@ Task(
 
 **After Red phase:** Verify commit with `git log --oneline -1`
 
-### Phase 2: Green
+#### Phase 2: Green
 
 ```
 Task(
@@ -71,7 +100,7 @@ Task(
 
 **After Green phase:** Verify commit with `git log --oneline -1`
 
-### Phase 3: Refactor
+#### Phase 3: Refactor
 
 ```
 Task(
@@ -83,7 +112,7 @@ Task(
 
 **After Refactor phase:** Verify commit with `git log --oneline -1`
 
-## 6. Verify Commit History
+### 7. Verify Commit History
 
 Before creating the PR:
 
@@ -97,7 +126,7 @@ git log --oneline main..HEAD
 2. `feat: implement issue #$1`
 3. `refactor: clean up issue #$1 implementation`
 
-## 7. Submit Pull Request
+### 8. Submit Pull Request
 
 - Push branch: `git push -u origin feature/issue-$1`
 - Create PR using GitHub MCP:
@@ -107,4 +136,13 @@ git log --oneline main..HEAD
 
 ---
 
-**Orchestrator Role:** This command PLANS and DELEGATES via three Task subagents (Red, Green, Refactor). Each subagent follows the corresponding /red, /green, or /refactor command. You maintain control flow between phases.
+## Workflow Summary
+
+| Workflow      | Branch Pattern     | Commits | Commit Prefixes               |
+| ------------- | ------------------ | ------- | ----------------------------- |
+| TDD (default) | `feature/issue-N`  | 3       | `test:`, `feat:`, `refactor:` |
+| Design        | `design/issue-N`   | 1       | `design:`                     |
+| Bug Fix       | `fix/issue-N`      | 1       | `fix:`                        |
+| Refactor      | `refactor/issue-N` | 1       | `refactor:`                   |
+
+**Orchestrator Role:** This command detects labels to route to specialized workflows (/design, /bugfix, /refactor-only) or executes the default TDD workflow via three Task subagents (Red, Green, Refactor).
