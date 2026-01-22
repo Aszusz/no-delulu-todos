@@ -67,3 +67,15 @@ Feature: Todo List
     Then I see 2 todos in the list
     And I see "Buy groceries" in the todo list
     And I see "Walk the dog" in the todo list
+
+  Scenario: Filter active todos shows only undone items
+    Given I open the todo app
+    When I enter "Buy groceries" in the todo input
+    And I click the add button
+    And I enter "Walk the dog" in the todo input
+    And I click the add button
+    And I toggle the todo "Buy groceries"
+    And I select the "active" filter
+    Then I see 1 todos in the list
+    And I see "Walk the dog" in the todo list
+    And I do not see "Buy groceries" in the todo list
