@@ -84,22 +84,18 @@ git add -A
 git commit -m "refactor: [description] for issue #$1
 
 - [List key refactoring changes]
-- [Note any patterns applied]
-
-Closes #$1"
+- [Note any patterns applied]"
 ```
 
-## 8. Submit Pull Request
+## 8. Report
 
-- Push branch: `git push -u origin refactor/issue-$1`
-- Create PR using GitHub MCP:
-  - Title: `Refactor: [summary] (#$1)`
-  - Body:
-    - Describe what was refactored and why
-    - Note that no behavior changes were made
-    - List any patterns applied
-  - Reference: `Closes #$1`
+Return:
+
+- Commit hash
+- Files modified
+- Description of what was refactored and why
+- Note that no behavior changes were made
 
 ---
 
-**Workflow Role:** This command ensures pure refactoring with continuous test verification. Use for issues labeled `refactor` or `chore`.
+**Workflow Role:** This command ensures pure refactoring with continuous test verification. Use for issues labeled `refactor` or `chore`. Called by `/implement-issue` orchestrator which handles PR creation.

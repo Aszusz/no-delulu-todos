@@ -73,19 +73,17 @@ git add -A
 git commit -m "design: implement UI for issue #$1
 
 - [List key visual changes]
-- [Note any new components created]
-
-Closes #$1"
+- [Note any new components created]"
 ```
 
-## 8. Submit Pull Request
+## 8. Report
 
-- Push branch: `git push -u origin design/issue-$1`
-- Create PR using GitHub MCP:
-  - Title: `Design: [UI feature summary] for #$1`
-  - Body: Include screenshots or description of visual changes
-  - Reference: `Closes #$1`
+Return:
+
+- Commit hash
+- Files created/modified
+- Summary of visual changes implemented
 
 ---
 
-**Workflow Role:** This command focuses on visual iteration rather than test-driven development. Use for issues labeled `design`, `ui`, or `frontend`.
+**Workflow Role:** This command focuses on visual iteration rather than test-driven development. Use for issues labeled `design`, `ui`, or `frontend`. Called by `/implement-issue` orchestrator which handles PR creation.

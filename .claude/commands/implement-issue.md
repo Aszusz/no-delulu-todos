@@ -6,7 +6,7 @@ argument-hint: [issue-number]
 
 # Implement Issue #$1
 
-Orchestrate the implementation of issue #$1 by detecting labels and routing to the appropriate workflow.
+Orchestrate the implementation of issue #$1 by detecting labels, routing to the appropriate workflow, and creating a PR.
 
 ## 1. Fetch Issue and Detect Labels
 
@@ -15,47 +15,59 @@ Orchestrate the implementation of issue #$1 by detecting labels and routing to t
 - Parse all acceptance criteria and business rules
 - Note any linked issues or dependencies
 
-## 2. Route to Appropriate Workflow
+## 2. Determine Workflow and Create Branch
 
-Based on detected labels, route to the specialized workflow:
+Based on detected labels, determine the workflow and create the appropriate branch:
 
-| Priority | Labels                            | Workflow               | Command             |
-| -------- | --------------------------------- | ---------------------- | ------------------- |
-| 1        | `design`, `ui`, `frontend`        | Design Workflow        | `/design $1`        |
-| 2        | `bug`, `fix`, `hotfix`            | Bug Fix Workflow       | `/bugfix $1`        |
-| 3        | `refactor`, `chore`               | Refactor-Only Workflow | `/refactor-only $1` |
-| 4        | `feature`, `enhancement`, or none | TDD Workflow           | Continue below      |
+| Priority | Labels                            | Workflow               | Branch Pattern     |
+| -------- | --------------------------------- | ---------------------- | ------------------ |
+| 1        | `design`, `ui`, `frontend`        | Design Workflow        | `design/issue-$1`  |
+| 2        | `bug`, `fix`, `hotfix`            | Bug Fix Workflow       | `fix/issue-$1`     |
+| 3        | `refactor`, `chore`               | Refactor-Only Workflow | `refactor/issue-$1`|
+| 4        | `feature`, `enhancement`, or none | TDD Workflow           | `feature/issue-$1` |
 
-**If a specialized workflow is matched:**
+```bash
+git checkout -b [branch-pattern]
+```
+
+## 3. Execute Workflow
+
+### If Design Workflow:
 
 ```
 Skill(
-  skill: "[matched-command]",
+  skill: "design",
   args: "$1"
 )
 ```
 
-**If no specialized labels match, continue with TDD workflow below.**
+### If Bug Fix Workflow:
 
----
-
-## TDD Workflow (Default)
-
-For `feature`, `enhancement`, or unlabeled issues, use the three-phase TDD approach.
-
-### 3. Create Feature Branch
-
-```bash
-git checkout -b feature/issue-$1
+```
+Skill(
+  skill: "bugfix",
+  args: "$1"
+)
 ```
 
-### 4. Explore Codebase
+### If Refactor-Only Workflow:
+
+```
+Skill(
+  skill: "refactor-only",
+  args: "$1"
+)
+```
+
+### If TDD Workflow (Default):
+
+#### 3a. Explore Codebase
 
 - Search for related features and similar implementations
 - Identify existing patterns and conventions in @CLAUDE.md
 - Review @TESTING.md for test patterns
 
-### 5. Plan Scenarios
+#### 3b. Plan Scenarios
 
 Create an ordered list of scenarios to implement. Each scenario should be:
 
@@ -72,11 +84,11 @@ Scenarios for issue #$1:
 ...
 ```
 
-### 6. Execute Three TDD Phases
+#### 3c. Execute Three TDD Phases
 
 **CRITICAL: Spawn exactly THREE subagents - one per TDD phase. Each phase handles ALL scenarios.**
 
-#### Phase 1: Red
+**Phase 1: Red**
 
 ```
 Task(
@@ -88,7 +100,7 @@ Task(
 
 **After Red phase:** Verify commit with `git log --oneline -1`
 
-#### Phase 2: Green
+**Phase 2: Green**
 
 ```
 Task(
@@ -100,7 +112,7 @@ Task(
 
 **After Green phase:** Verify commit with `git log --oneline -1`
 
-#### Phase 3: Refactor
+**Phase 3: Refactor**
 
 ```
 Task(
@@ -112,27 +124,40 @@ Task(
 
 **After Refactor phase:** Verify commit with `git log --oneline -1`
 
-### 7. Verify Commit History
+## 4. Verify Commits
 
-Before creating the PR:
+Before creating the PR, verify commits exist:
 
 ```bash
 git log --oneline main..HEAD
 ```
 
-**Verify:** There should be exactly THREE commits:
+**Expected commits by workflow:**
 
-1. `test: add failing tests for issue #$1`
-2. `feat: implement issue #$1`
-3. `refactor: clean up issue #$1 implementation`
+| Workflow      | Commits | Prefixes                        |
+| ------------- | ------- | ------------------------------- |
+| Design        | 1       | `design:`                       |
+| Bug Fix       | 1       | `fix:`                          |
+| Refactor-Only | 1       | `refactor:`                     |
+| TDD (default) | 3       | `test:`, `feat:`, `refactor:`   |
 
-### 8. Submit Pull Request
+## 5. Submit Pull Request
 
-- Push branch: `git push -u origin feature/issue-$1`
-- Create PR using GitHub MCP:
-  - Title: `Fixes #$1: [feature summary]`
-  - Body: List all scenarios implemented with their commits
-  - Reference: `Closes #$1`
+Push the branch and create PR:
+
+```bash
+git push -u origin [branch-name]
+```
+
+Create PR using GitHub MCP with:
+
+- **Title:** Based on workflow type and issue summary
+  - Design: `Design: [summary] (#$1)`
+  - Bug Fix: `Fix: [summary] (#$1)`
+  - Refactor: `Refactor: [summary] (#$1)`
+  - TDD: `Feat: [summary] (#$1)`
+- **Body:** Summary of changes made, referencing commits
+- **Reference:** `Closes #$1`
 
 ---
 
@@ -145,4 +170,4 @@ git log --oneline main..HEAD
 | Bug Fix       | `fix/issue-N`      | 1       | `fix:`                        |
 | Refactor      | `refactor/issue-N` | 1       | `refactor:`                   |
 
-**Orchestrator Role:** This command detects labels to route to specialized workflows (/design, /bugfix, /refactor-only) or executes the default TDD workflow via three Task subagents (Red, Green, Refactor).
+**Orchestrator Role:** This command detects labels, creates the branch, routes to specialized workflows (/design, /bugfix, /refactor-only) or executes the default TDD workflow, then creates the PR for all workflows.

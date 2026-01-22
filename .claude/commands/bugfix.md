@@ -79,24 +79,20 @@ git add -A
 git commit -m "fix: resolve issue #$1
 
 - Add regression test for [bug description]
-- Fix [root cause description]
-
-Closes #$1"
+- Fix [root cause description]"
 ```
 
 **Note:** Both the regression test and the fix are included in a single commit.
 
-## 9. Submit Pull Request
+## 9. Report
 
-- Push branch: `git push -u origin fix/issue-$1`
-- Create PR using GitHub MCP:
-  - Title: `Fix: [bug summary] (#$1)`
-  - Body:
-    - Describe the bug and root cause
-    - Explain the fix approach
-    - Note the regression test added
-  - Reference: `Closes #$1`
+Return:
+
+- Commit hash
+- Files created/modified
+- Description of the bug and root cause
+- Summary of the fix approach
 
 ---
 
-**Workflow Role:** This command ensures bugs are fixed with proper regression tests. Use for issues labeled `bug`, `fix`, or `hotfix`.
+**Workflow Role:** This command ensures bugs are fixed with proper regression tests. Use for issues labeled `bug`, `fix`, or `hotfix`. Called by `/implement-issue` orchestrator which handles PR creation.
