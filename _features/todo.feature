@@ -5,3 +5,14 @@ Feature: Todo List
     When I enter "Buy groceries" in the todo input
     And I click the add button
     Then I see "Buy groceries" in the todo list
+
+  Scenario: Cannot add empty todo
+    Given I open the todo app
+    When I click the add button
+    Then the todo list is empty
+
+  Scenario: Cannot add whitespace-only todo
+    Given I open the todo app
+    When I enter "   " in the todo input
+    And I click the add button
+    Then the todo list is empty

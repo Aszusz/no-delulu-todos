@@ -23,3 +23,7 @@ Then('I see {string} in the todo list', async ({ page }, text: string) => {
   const item = page.getByTestId(testIds.item).filter({ hasText: text })
   await expect(item).toBeVisible()
 })
+
+Then('the todo list is empty', async ({ page }) => {
+  await expect(page.getByTestId(testIds.item)).toHaveCount(0)
+})
