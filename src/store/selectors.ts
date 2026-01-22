@@ -1,12 +1,12 @@
 import type { RootState } from './index'
 import type { FilterType, Todo } from './state'
 
-export const selectTodos = (state: RootState): Todo[] => state.game.todos
+export const selectTodos = (state: RootState): Todo[] => state.app.todos
 
-export const selectFilter = (state: RootState): FilterType => state.game.filter
+export const selectFilter = (state: RootState): FilterType => state.app.filter
 
 export const selectDeleteConfirmation = (state: RootState): string | null =>
-  state.game.deleteConfirmation
+  state.app.deleteConfirmation
 
 export const selectFilteredTodos = (state: RootState): Todo[] => {
   const todos = selectTodos(state)
@@ -18,7 +18,6 @@ export const selectFilteredTodos = (state: RootState): Todo[] => {
     case 'done':
       return todos.filter((todo) => todo.done)
     case 'all':
-    default:
       return todos
   }
 }
