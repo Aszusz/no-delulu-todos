@@ -11,6 +11,24 @@ Given('I open the todo app', async ({ page }) => {
   await setupDefault(page)
 })
 
+Given(
+  'I open the todo app at {string}',
+  async ({ page }, dateTimeStr: string) => {
+    const timestamp = new Date(dateTimeStr).getTime()
+    await page.addInitScript(`{
+    const originalNow = Date.now
+    Date.now = () => ${timestamp}
+  }`)
+    await page.goto('/')
+    await page.waitForFunction(() => window.__TEST_HARNESS__ !== undefined, {
+      timeout: 5000,
+    })
+    await page.evaluate(() => {
+      window.__TEST_HARNESS__?.ready()
+    })
+  }
+)
+
 When('I enter {string} in the todo input', async ({ page }, text: string) => {
   await page.getByTestId(testIds.input).fill(text)
 })
@@ -27,3 +45,11 @@ Then('I see {string} in the todo list', async ({ page }, text: string) => {
 Then('the todo list is empty', async ({ page }) => {
   await expect(page.getByTestId(testIds.item)).toHaveCount(0)
 })
+
+Then(
+  'I see the timestamp {string} for {string}',
+  async ({ page }, timestamp: string, todoText: string) => {
+    const item = page.getByTestId(testIds.item).filter({ hasText: todoText })
+    await expect(item.getByTestId(testIds.itemTimestamp)).toHaveText(timestamp)
+  }
+)

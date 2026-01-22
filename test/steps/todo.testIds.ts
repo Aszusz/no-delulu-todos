@@ -4,4 +4,5 @@ export const testIds = {
   list: 'todo-list',
   item: 'todo-item',
   itemText: 'todo-item-text',
+  itemTimestamp: 'todo-item-timestamp',
 }

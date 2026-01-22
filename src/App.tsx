@@ -4,6 +4,16 @@ import { useAppDispatch, useAppSelector } from './hooks'
 import { AppActions } from './store/actions'
 import { selectTodos } from './store/selectors'
 
+function formatTimestamp(timestamp: number): string {
+  return new Date(timestamp).toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
+
 function App() {
   const dispatch = useAppDispatch()
   const todos = useAppSelector(selectTodos)
@@ -42,6 +52,9 @@ function App() {
         {todos.map((todo) => (
           <li key={todo.id} data-testid={testIds.item}>
             <span data-testid={testIds.itemText}>{todo.text}</span>
+            <span data-testid={testIds.itemTimestamp}>
+              {formatTimestamp(todo.createdAt)}
+            </span>
           </li>
         ))}
       </ul>
